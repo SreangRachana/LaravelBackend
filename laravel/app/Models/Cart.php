@@ -6,13 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Carbon\Carbon;
 
-class Category extends Model
+class Cart extends Model
 {
-    // Allow mass assignment
-    protected $fillable = ['name'];
-
+    protected $fillable = ["quantity","customer_id","product-id"];
     public function product(){
         return $this->hasMany(Product::class);
+    }
+    public function customer(){
+        return $this->belongsTo(Customer::class);
     }
     protected function cartDate(): Attribute
     {
@@ -22,4 +23,5 @@ class Category extends Model
 
         );
     }
+
 }

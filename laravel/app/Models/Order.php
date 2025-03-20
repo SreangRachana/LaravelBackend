@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Order extends Model
+{
+    use SoftDeletes;
+    protected $date = ["deleted_at"];
+    protected $fillable = ["oder_date","total_price","customer_id"];
+
+    public function payments(){
+        return $this->hasMany(Payment::class);
+    }
+    public function customer(){
+        return $this->belongsTo(Customer::class);
+    }
+    public function order_products(){
+        return $this->hasMany(OrderProduct::class);
+    }
+
+    protected function orderDate(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value)=> Carbon::createFromFormat("d/m/Y H:i;s", $value)->format("Y-m-d H:i:s"),
+            get: fn ($value) => Carbon::parse($value)->format('d/m/Y H;i:s'),
+
+        );
+    }
+
+
+
+}

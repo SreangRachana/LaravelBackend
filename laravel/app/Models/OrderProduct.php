@@ -6,15 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Carbon\Carbon;
 
-class Category extends Model
+class OrderProduct extends Model
 {
-    // Allow mass assignment
-    protected $fillable = ['name'];
+    protected $fillable = ["order_id","product_id","price","quantity"];
 
     public function product(){
-        return $this->hasMany(Product::class);
+        return $this->belongsTo(Product::class);
     }
-    protected function cartDate(): Attribute
+    public function order(){
+        return $this->belongsTo(Order::class);
+    }
+    protected function orderDate(): Attribute
     {
         return Attribute::make(
             set: fn ($value)=> Carbon::createFromFormat("d/m/Y H:i;s", $value)->format("Y-m-d H:i:s"),
