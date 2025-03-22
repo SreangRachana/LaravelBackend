@@ -26,8 +26,8 @@ class Order extends Model
     protected function orderDate(): Attribute
     {
         return Attribute::make(
-            set: fn ($value)=> Carbon::createFromFormat("d/m/Y H:i;s", $value)->format("Y-m-d H:i:s"),
-            get: fn ($value) => Carbon::parse($value)->format('d/m/Y H;i:s'),
+            set: fn ($value)=> Carbon::createFromFormat("d/m/Y H:i:s", $value)->format("Y-m-d H:i:s"),
+            get: fn ($value) => Carbon::parse($value)->format('d/m/Y H:i:s'),
 
         );
     }
