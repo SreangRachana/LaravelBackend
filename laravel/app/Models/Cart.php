@@ -8,7 +8,7 @@ use Carbon\Carbon;
 
 class Cart extends Model
 {
-    protected $fillable = ["quantity","customer_id","product-id"];
+    protected $fillable = ["quantity","customer_id","product_id"];
     public function product(){
         return $this->hasMany(Product::class);
     }
