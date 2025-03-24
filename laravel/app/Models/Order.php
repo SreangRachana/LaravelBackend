@@ -11,7 +11,7 @@ class Order extends Model
 {
     use SoftDeletes;
     protected $date = ["deleted_at"];
-    protected $fillable = ["oder_date","total_price","customer_id"];
+    protected $fillable = ["order_date","total_price","customer_id"];
 
     public function payments(){
         return $this->hasMany(Payment::class);
