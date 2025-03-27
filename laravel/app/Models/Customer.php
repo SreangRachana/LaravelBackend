@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Carbon\Carbon;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Customer extends Model
 {
+    use SoftDeletes;
     protected $fillable = ["name","email","address","phone"];
     public function carts(){
         return $this->hasMany(Cart::class);
@@ -24,5 +24,5 @@ class Customer extends Model
     public function products(){
         return $this->hasManyThrough(Product::class, Cart::class);
     }
-    
+
 }

@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Carbon\Carbon;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Wishlist extends Model
 {
+    use SoftDeletes;
     protected $fillable = ["product_id", "customer_id"];
     public function product(){
         return $this->belongsTo(Product::class);
@@ -15,5 +15,5 @@ class Wishlist extends Model
     public function customer(){
         return $this->belongsTo(Customer::class);
     }
-    
+
 }
