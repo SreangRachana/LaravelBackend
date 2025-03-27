@@ -14,12 +14,5 @@ class Category extends Model
     public function product(){
         return $this->hasMany(Product::class);
     }
-    protected function cartDate(): Attribute
-    {
-        return Attribute::make(
-            set: fn ($value)=> Carbon::createFromFormat("d/m/Y H:i;s", $value)->format("Y-m-d H:i:s"),
-            get: fn ($value) => Carbon::parse($value)->format('d/m/Y H;i:s'),
-
-        );
-    }
+    
 }
