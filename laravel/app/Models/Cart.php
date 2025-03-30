@@ -10,7 +10,7 @@ class Cart extends Model
 {
     use SoftDeletes;
     protected $fillable = ["quantity","customer_id","product_id"];
-    public function product(){
+    public function products(){
         return $this->hasMany(Product::class);
     }
     public function customer(){

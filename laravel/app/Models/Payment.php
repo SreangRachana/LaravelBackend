@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Payment extends Model
 {
     use SoftDeletes;
-    protected $fillable = ['payment-id','payment_method', 'amount', 'order_id', 'customer_id'];
+    protected $fillable = ['payment_date','payment_id','payment_method', 'amount', 'order_id', 'customer_id'];
 
     public function customer(){
         return $this->belongsTo(Customer::class);
@@ -20,8 +20,8 @@ class Payment extends Model
     protected function paymentDate(): Attribute
     {
         return Attribute::make(
-            set: fn ($value)=> Carbon::createFromFormat("d/m/Y H:i;s", $value)->format("Y-m-d H:i:s"),
-            get: fn ($value) => Carbon::parse($value)->format('d/m/Y H;i:s'),
+            set: fn ($value)=> Carbon::createFromFormat("d/m/Y H:i:s", $value)->format("Y-m-d H:i:s"),
+            get: fn ($value) => Carbon::parse($value)->format('d/m/Y H:i:s'),
 
         );
     }

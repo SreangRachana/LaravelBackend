@@ -13,7 +13,7 @@ class Category extends Model
     // Allow mass assignment
     protected $fillable = ['name'];
 
-    public function product(){
+    public function products(){
         return $this->hasMany(Product::class);
     }
 
