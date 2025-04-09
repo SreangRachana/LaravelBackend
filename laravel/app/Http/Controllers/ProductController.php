@@ -10,7 +10,7 @@ class ProductController extends Controller
     public function getProducts()
     {
         $products = Product::all();
-        return response()->json(['products' => $products]);
+        return response()->json(['products' => $products, 'message' => 'success']);
     }
     public function createProduct(Request $request)
     {
@@ -21,8 +21,7 @@ class ProductController extends Controller
             'description' => $request['description'],
             'image' => $request['image'],
         ]);
-
-        return response()->json(['message'=> $request['name'] . " has been added."]);
+        return response()->json(['message'=> $request['name'] . 'has been added.']);
     }
 
     public function getProduct($productId) {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -10,7 +11,7 @@ class CategoryController extends Controller
     public function getCategories()
     {
         $categories = Category::all();
-        return response()->json(['categories' => $categories]);
+        return response()->json(['categories' => $categories, 'message' => 'success']);
     }
     public function createCategory(Request $request)
     {
@@ -18,10 +19,11 @@ class CategoryController extends Controller
         return response()->json(['message'=> $request['name'] . " has been added."]);
     }
 
-    public function getCategory($categoryId) {
+    public function getCategory($categoryId)
+    {
         $category = Category::findOrFail($categoryId);
 
-        return response()->json(['category' => $category]);
+        return response()->json(['category' => $category, 'message' => 'success']);
     }
 
     public function updateCategory($categoryId, Request $request)
@@ -34,7 +36,8 @@ class CategoryController extends Controller
         return response()->json(["message" => "Category Updated!!!"]);
     }
 
-    public function deleteCategory($categoryId) {
+    public function deleteCategory($categoryId)
+    {
         $category = Category::findOrFail($categoryId);
 
         $category->delete();
