@@ -45,4 +45,12 @@ class CategoryController extends Controller
         return response()->json(["message" => "Category Deleted!!!"]);
     }
 
+    public function getLimitedCategories($limit)
+    {
+        // Assuming you want to get the specified number of categories
+        $categories = Category::limit($limit)->get();
+        return response()->json($categories);
+    }
+
+
 }
