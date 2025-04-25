@@ -11,7 +11,7 @@ class CategoryController extends Controller
     public function getCategories()
     {
         $categories = Category::all();
-        return response()->json(['categories' => $categories, 'message' => 'success']);
+        return response()->json(['categories' => $categories, 'success' => true]);
     }
     public function createCategory(Request $request)
     {
