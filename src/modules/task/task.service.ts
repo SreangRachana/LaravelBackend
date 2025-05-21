@@ -1,39 +1,64 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Task } from 'src/tasks/task.entity';
+import { Repository } from 'typeorm';
+import { CreateTask } from './dto/create-task.interface';
+import { User } from 'src/users/user.entity';
 
 @Injectable()
 export class TaskService {
-  getTask(id: string) {
-    console.log(id);
-    return {
-      name: 'Task 1',
-      description: 'Description of Task 1',
-      createdAt: new Date().toISOString(),
-      completedAt: null,
-      userId: 1,
-    };
+  constructor(
+    @InjectRepository(Task)
+    private tasksRepo: Repository<Task>,
+    @InjectRepository(User)
+    private usersRepo: Repository<User>,
+  ) {}
+
+  getAllTasks() {
+    return this.tasksRepo.find({
+      relations: ['user'],
+    });
   }
-  createTask(body: any) {
-    console.log(body);
-    return {
-      name: 'Task 1',
-      description: 'Description of Task 1',
-      createdAt: new Date().toISOString(),
-      completedAt: null,
-      userId: 1,
-    };
+
+  getTask(id: number) {
+    return this.tasksRepo.findOne({ where: { id }, relations: ['user'] });
   }
-  updateTask(id: string, body: any) {
-    console.log(body);
-    return {
-      name: 'Task 1',
-      description: 'Description of Task 1',
-      createdAt: new Date().toISOString(),
-      completedAt: null,
-      userId: 1,
-    };
+
+  async createTask(body: CreateTask) {
+    const user = await this.usersRepo.findOneBy({ id: body.userId });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    const task = this.tasksRepo.create({
+      name: body.name,
+      description: body.description,
+      createdAt: body.createdAt,
+      completedAt: body.completedAt,
+      user: user,
+    });
+    return this.tasksRepo.save(task);
   }
-  deleteTask(id: string) {
-    console.log(id);
-    return { message: 'success' };
+  async updateTask(id: number, body: CreateTask) {
+    const user = await this.usersRepo.findOneBy({ id: body.userId });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    const task = await this.tasksRepo.findOneBy({ id });
+    if (!task) {
+      throw new NotFoundException('Task not found');
+    }
+    task.name = body.name;
+    if (body.description !== undefined) task.description = body.description;
+    if (body.createdAt !== undefined) task.createdAt = body.createdAt;
+    if (body.completedAt !== undefined) task.completedAt = body.completedAt;
+    task.user = user;
+    return this.tasksRepo.save(task);
+  }
+  deleteTask(id: number) {
+    return this.tasksRepo.delete({ id });
+  }
+
+  deleteAllTasks() {
+    return this.tasksRepo.clear();
   }
 }

@@ -4,6 +4,7 @@ import { UserModule } from './modules/user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/user.entity';
 import { Task } from './tasks/task.entity';
+import { TaskModule } from './modules/task/task.module';
 
 @Module({
   imports: [
