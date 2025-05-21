@@ -50,9 +50,6 @@ export default {
     },
     pendingTasks() {
       if (this.todos) {
-        // if (this.todos.length > 2) {
-        //   this.todos.push({ task: "new" });
-        // }
         return this.todos.filter((todo) => todo.completedAt == null);
       }
       return [];

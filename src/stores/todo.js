@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import axios from "axios";
 
 export const useTodoStore = defineStore("todo", {
   state: () => ({
@@ -9,49 +10,74 @@ export const useTodoStore = defineStore("todo", {
   },
   actions: {
     async fetchTodos() {
-      await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve([
-            {
-              id: 1,
-              name: "Clean house",
-              description: "cleaning house in detail .....",
-              createdAt: "2024-15-07 07:50:00",
-              completedAt: null,
-            },
-            {
-              id: 2,
-              name: "Do homework",
-              description: "Instruction on doing homework ....",
-              createdAt: "2024-05-07 08:00:00",
-              completedAt: "2024-05-07 08:10:00",
-            },
-          ]);
-        }, 1000);
-      }).then((todos) => (this.todos = todos));
+      try {
+        const response = await axios.get("http://localhost:3100/tasks");
+        this.todos = response.data; // assuming the API returns an array of todos
+      } catch (error) {
+        console.error("Failed to fetch todos:", error);
+      }
     },
-    toggleStatus(id) {
+    async toggleStatus(id) {
       const foundIndex = this.todos.findIndex((t) => t.id == id);
+      console.log(foundIndex);
       if (foundIndex >= 0) {
         if (this.todos[foundIndex].completedAt != null) {
-          this.todos[foundIndex].completedAt = null;
+          try {
+            const response = await axios.patch(
+              "http://localhost:3100/tasks/" + id + "/pending",
+              {
+                completedAt: null,
+              }
+            );
+            if (response.status == 200) {
+              this.todos[foundIndex].completedAt = null;
+            }
+          } catch (error) {
+            console.error("Failed to add todo:", error);
+          }
         } else {
-          this.todos[foundIndex].completedAt = new Date().toISOString();
+          try {
+            const response = await axios.patch(
+              "http://localhost:3100/tasks/" + id + "/done",
+              {
+                completedAt: new Date().toISOString(),
+              }
+            );
+            if (response.status == 200) {
+              this.todos[foundIndex].completedAt = new Date().toISOString();
+            }
+          } catch (error) {
+            console.error("Failed to add todo:", error);
+          }
         }
       }
     },
-    addTodo(todo) {
-      this.todos.push({
-        id: this.todos.length + 1,
-        name: todo,
-        description: "description",
-        createdAt: new Date().toISOString(),
-        completedAt: null,
-      });
-      this.todos = JSON.parse(JSON.stringify(this.todos));
+    async addTodo(todo) {
+      try {
+        const response = await axios.post("http://localhost:3100/tasks/", {
+          name: todo,
+          description: "description",
+          createdAt: new Date().toISOString(),
+          completedAt: null,
+        });
+        if (response.status == 201) {
+          this.todos.push(response.data);
+        }
+      } catch (error) {
+        console.error("Failed to add todo:", error);
+      }
     },
-    clearAll() {
-      this.todos = [];
+    async clearAll() {
+      try {
+        const response = await axios.delete(
+          "http://localhost:3100/tasks/deleteAll"
+        );
+        if (response.status == 200) {
+          this.todos = [];
+        }
+      } catch (error) {
+        console.error("Failed to add todo:", error);
+      }
     },
   },
 });
